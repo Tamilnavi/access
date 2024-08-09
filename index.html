@@ -4,9 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>access</title>
+
+<style>
+/* Button styles */
+.ost {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    color: white;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    text-transform: uppercase;
+}
+
+/* Hover effects */
+.ost:hover {
+    background: linear-gradient(45deg, #2575fc, #6a11cb);
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}
+
+/* Active effects */
+.ost:active {
+    transform: translateY(2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+
 </head>
 <body>
-    <button onclick="window.location.href='ost programs.docx'">ost programs</button>
+    <button class="ost"  onclick="window.location.href='ost programs.docx'">ost programs</button>
     
 </body>
-</html> DOCTYPE html-->
+</html>
