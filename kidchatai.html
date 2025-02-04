@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids' Fun AI Assistant</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background-color: #f0f9ff;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2b5d8a;
+            text-align: center;
+        }
+
+        .chat-area {
+            height: 400px;
+            border: 2px solid #a3d1ff;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 20px 0;
+            overflow-y: auto;
+            background-color: #f8fbff;
+        }
+
+        .message {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 15px;
+            max-width: 70%;
+        }
+
+        .user-message {
+            background-color: #e3f2fd;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background-color: #fff3e0;
+            margin-right: auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #a3d1ff;
+            border-radius: 10px;
+            font-size: 16px;
+            
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .example-questions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .example-btn {
+            background-color: #ff9800;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌈 Kids' Fun AI Helper 🎨</h1>
+        <div class="chat-area" id="chatArea"></div>
+        
+        <div class="example-questions">
+            <div class="example-btn" onclick="askQuestion('Tell me a funny story about dinosaurs')">🦖 Dino Story</div>
+            <div class="example-btn" onclick="askQuestion('Why is the sky blue?')">🌤️ Sky Question</div>
+            <div class="example-btn" onclick="askQuestion('What do rabbits eat?')">🐰 Rabbit Facts</div>
+            <div class="example-btn" onclick="askQuestion('Explain rainbows simply')">🌈 Rainbows</div>
+        </div>
+
+        <input type="text" id="userInput" placeholder="Ask me anything! ✨" onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Ask ➡️</button>
+    </div>
+
+    <script>
+        const API_KEY = 'AIzaSyAi443deEscp2nMMjguAT98NkuE4CMweDE';
+        const chatArea = document.getElementById('chatArea');
+        const userInput = document.getElementById('userInput');
+
+        async function generateResponse(prompt) {
+            const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+            
+            try {
+                const response = await fetch(`${url}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Respond to this in a fun,your name is Sunny(dont repeat name again),simple way appropriate for a 5-8 year old child. Use emojis where appropriate. The question is: ${prompt}`
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error('Error:', error);
+                return "Oops! Let's try that again. Could you ask me something else? 😊";
+            }
+        }
+
+        function addMessage(message, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            messageDiv.innerHTML = message;
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const question = userInput.value.trim();
+            if (!question) return;
+
+            addMessage(question, true);
+            userInput.value = '';
+            
+            const response = await generateResponse(question);
+            addMessage(response, false);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function askQuestion(question) {
+            userInput.value = question;
+            await sendMessage();
+        }
+
+        // Initial welcome message
+        addMessage("Hi there! I'm Sunny the AI Helper! 🌞 Ask me anything - I know lots of fun facts and stories! 🦄✨", false);
+    </script>
+</body>
+</html>
